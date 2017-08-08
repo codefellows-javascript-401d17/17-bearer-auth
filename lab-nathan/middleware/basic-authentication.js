@@ -6,37 +6,59 @@ const debug = require('debug')('authentication-server:basic-authentication');
 let basicAuthentication = function(request, response, next) {
   debug('basicAuthentication');
 
-  let authorizationHeader = request.headers.authorization;
+  let authorization = request.headers.authorization;
 
-  if (!authorizationHeader) {
-    let error = createError(401, 'authorization header required');
+  if (!authorization) {
+    let error = createError(401, 'Authorization header not provided.');
     return next(error);
   }
 
-  let base64String = authorizationHeader.split('Basic ')[1];
+  let base64CredentialArray = authorization.split('Basic ');
 
-  if (!base64String) {
-    let error = createError(401, 'authorization credentials required.');
+  if (base64CredentialArray.length < 2) {
+    let error = createError(401, 'Invalid authorization header format.');
     return next(error);
   }
 
-  let utf8String = new Buffer(base64String, 'base64').toString();
-  let credentialArray = utf8String.split(':');
+  let base64Credentials = base64CredentialArray[1];
+
+  if (!base64Credentials) {
+    let error = createError(401, 'Authorization header credentials not provided.');
+    return next(error);
+  }
+
+  let base64CredentialBuffer = Buffer.from(base64Credentials, 'base64');
+  let credentials = base64CredentialBuffer.toString();
+
+  if (!credentials) {
+    let error = createError(401, 'Authorization header credentials not provided.');
+    return next(error);
+  }
+
+  let credentialArray = credentials.split(':');
+
+  if (credentialArray.length < 2) {
+    let error = createError(401, 'Invalid credential format.');
+    return next(error);
+  }
+
+  let username = credentialArray[0];
+  let password = credentialArray[1];
+
+  if (!username) {
+    let error = createError(401, 'Invalid username.');
+    return next(error);
+  }
+
+  if (!password) {
+    let error = createError(401, 'Password not provided.');
+    return next(error);
+  }
 
   request.authorization = {
-    username: credentialArray[0],
-    password: credentialArray[1]
+    username: username,
+    password: password
   };
-
-  if (!request.authorization.username) {
-    let error = createError(401, 'username required');
-    return next(error);
-  }
-
-  if (!request.authorization.password) {
-    let error = createError(401, 'password required');
-    return next(error);
-  }
 
   next();
 };
