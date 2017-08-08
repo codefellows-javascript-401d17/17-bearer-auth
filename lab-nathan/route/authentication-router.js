@@ -2,14 +2,14 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const debug = require('debug')('basic-authentication-server:basic-authentication-router');
+const debug = require('debug')('authentication-server:authentication-router');
 const basicAuthentication = require('../middleware/basic-authentication.js');
 const User = require('../model/user.js');
 const createError = require('http-errors');
 
-const basicAuthenticationRouter = Router();
+const authenticationRouter = Router();
 
-basicAuthenticationRouter.post('/api/signup', jsonParser, function(request, response, next) {
+authenticationRouter.post('/api/signup', jsonParser, function(request, response, next) {
   debug('POST: /api/signup');
 
   if (Object.keys(request.body).length == 0) {
@@ -28,20 +28,21 @@ basicAuthenticationRouter.post('/api/signup', jsonParser, function(request, resp
     .catch(next);
 });
 
-basicAuthenticationRouter.get('/api/signin', basicAuthentication, function(request, response, next) {
+authenticationRouter.get('/api/signin', basicAuthentication, function(request, response, next) {
   debug('GET: /api/signin');
 
   User.findOne({ username: request.authorization.username })
     .then(user => {
       if (!user) {
-        return Promise.reject(createError(404, 'user not authorized'));
+        let error = createError(404, 'user not authorized');
+        return Promise.reject(error);
       }
 
-      return user.comparePasswordHash(request.authorization.password)
+      return user.comparePasswordHash(request.authorization.password);
     })
     .then(user => user.generateToken())
     .then(token => response.send(token))
     .catch(next);
 });
 
-module.exports = basicAuthenticationRouter;
+module.exports = authenticationRouter;

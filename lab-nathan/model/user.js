@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
-const debug = require('debug')('basic-authentication-server:user');
+const debug = require('debug')('authentication-server:user');
 
 const Schema = mongoose.Schema;
 
@@ -70,8 +70,8 @@ userSchema.methods.generateToken = function() {
 
   return new Promise((resolve, reject) => {
     this.generateFindHash()
-    .then(findHash => resolve(jwt.sign({ token: findHash }, process.env.APP_SECRET)))
-    .catch(error => reject(error));
+      .then(findHash => resolve(jwt.sign({ token: findHash }, process.env.APP_SECRET)))
+      .catch(error => reject(error));
   });
 }
 

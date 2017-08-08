@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test-win": "SET DEBUG=basic-authorization-server* && mocha",
-    "test": "DEBUG='basic-authorization-server*' && mocha",
-    "start-win": "SET DEBUG=basic-authorization-server* && node server.js",
-    "start": "DEBUG='basic-authorization-server*' && node server.js"
+    "test-win": "SET DEBUG=authentication-server* && mocha",
+    "test": "DEBUG='authentication-server*' && mocha",
+    "start-win": "SET DEBUG=authentication-server* && node server.js",
+    "start": "DEBUG='authentication-server*' && node server.js"
   },
   "keywords": [],
   "author": "",

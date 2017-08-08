@@ -1,7 +1,7 @@
 'use strict';
 
 const createError = require('http-errors');
-const debug = require('debug')('basic-authentication-server:basic-authentication');
+const debug = require('debug')('authentication-server:basic-authentication');
 
 let basicAuthentication = function(request, response, next) {
   debug('basicAuthentication');
@@ -39,6 +39,6 @@ let basicAuthentication = function(request, response, next) {
   }
 
   next();
-}
+};
 
 module.exports = basicAuthentication;

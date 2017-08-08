@@ -2,9 +2,6 @@
 
 const expect = require('chai').expect;
 const request = require('superagent');
-const mongoose = require('mongoose');
-const EOL = require('os').EOL;
-
 const User = require('../model/user.js');
 
 require('../server.js');
@@ -12,20 +9,20 @@ require('../server.js');
 const url = `http://localhost:${process.env.PORT}`;
 const exampleUser = {
   username: 'exampleuser',
-  password: "1234",
+  password: '1234',
   email: 'exampleuser@test.com'
-}
+};
 
-describe('Authorization Routes', function() {
+describe('Authentication Routes', function() {
   describe('unregistered routes', function() {
 
     it('should return a 404 error', done => {
       request.get(`${url}/api/fakesignin`)
-      .auth('exampleuser', '1234')
-      .end((error, response) => {
-        expect(response.status).to.equal(404);
-        done();
-      });
+        .auth('exampleuser', '1234')
+        .end((error, response) => {
+          expect(response.status).to.equal(404);
+          done();
+        });
     });
   });
 
@@ -34,21 +31,21 @@ describe('Authorization Routes', function() {
 
       after(done => {
         User.remove({})
-        .then(() => done())
-        .catch(done);
+          .then(() => done())
+          .catch(done);
       });
 
       it('should return a token', done => {
         request.post(`${url}/api/signup`)
-        .send(exampleUser)
-        .end((error, response) => {
-          if (error) {
-            return done(error);
-          }
-          expect(response.status).to.equal(200);
-          expect(response.text).to.be.a('string');
-          done();
-        });
+          .send(exampleUser)
+          .end((error, response) => {
+            if (error) {
+              return done(error);
+            }
+            expect(response.status).to.equal(200);
+            expect(response.text).to.be.a('string');
+            done();
+          });
       });
 
     });
@@ -57,11 +54,11 @@ describe('Authorization Routes', function() {
 
       it('should return a 400 error', done => {
         request.post(`${url}/api/signup`)
-        .send()
-        .end((error, response) => {
-          expect(response.status).to.equal(400);
-          done();
-        });
+          .send()
+          .end((error, response) => {
+            expect(response.status).to.equal(400);
+            done();
+          });
       });
 
     });
@@ -73,27 +70,27 @@ describe('Authorization Routes', function() {
       before(done => {
         let user = new User(exampleUser);
         user.generatePasswordHash(exampleUser.password)
-        .then(user => user.save())
-        .then(user => {
-          this.tempUser = user;
-          done();
-        })
-        .catch(done);
+          .then(user => user.save())
+          .then(user => {
+            this.tempUser = user;
+            done();
+          })
+          .catch(done);
       });
 
       after(done => {
         User.remove({})
-        .then(() => done())
-        .catch(done);
+          .then(() => done())
+          .catch(done);
       });
 
       it('should return a token', done => {
         request.get(`${url}/api/signin`)
-        .auth('exampleuser', '1234')
-        .end((error, response) => {
-          expect(response.status).to.equal(200);
-          done();
-        });
+          .auth('exampleuser', '1234')
+          .end((error, response) => {
+            expect(response.status).to.equal(200);
+            done();
+          });
       });
 
     });
@@ -102,11 +99,11 @@ describe('Authorization Routes', function() {
 
       it('should return a 404 error', done => {
         request.get(`${url}/api/signin`)
-        .auth('fakeuser', '4321')
-        .end((error, response) => {
-          expect(response.status).to.equal(404);
-          done();
-        });
+          .auth('fakeuser', '4321')
+          .end((error, response) => {
+            expect(response.status).to.equal(404);
+            done();
+          });
       });
 
     });
