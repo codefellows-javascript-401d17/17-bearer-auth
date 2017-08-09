@@ -21,4 +21,8 @@ const exampleContact = {
   phone: 2065555555,
 };
 
-describe('')
+describe('Contact Routes', function() {
+  describe('POST: /api/signup', function() {
+    describe('with a valid body')
+  })
+})

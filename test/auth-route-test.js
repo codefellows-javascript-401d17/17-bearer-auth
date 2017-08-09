@@ -57,9 +57,9 @@ describe('Auth Routes', function() {
       after( done => {
         User.remove({})
         .then( () => done())
-        .catch(done)
-      })
-    })
+        .catch(done);
+      });
+    });
   });
 
   describe('GET: /api/signin', function() {

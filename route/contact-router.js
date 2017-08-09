@@ -10,7 +10,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 const contactRouter = module.exports = Router();
 
-contactRouter.post('/api/gallery', bearerAuth, jsonParser, function(req, res, next) {
+contactRouter.post('/api/contact', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/contact');
 
   req.body.userID = req.user._id;
@@ -24,6 +24,14 @@ contactRouter.get('/api/contact/:id', bearerAuth, function(req, res, next) {
   debug('GET: /api/gallery/:id');
 
   Contact.findById(req.params.id)
+  .then( contact => res.json(contact))
+  .catch(next);
+});
+
+contactRouter.put('/api/contact/:id', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/contact');
+
+  Contact.findByIdAndUpdate(req.params.id)
   .then( contact => res.json(contact))
   .catch(next);
 });
