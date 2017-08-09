@@ -37,4 +37,31 @@ contactRouter.get('/api/contact/:id', bearerAuthentication, function(request, re
     });
 });
 
+contactRouter.put('/api/contact/:id', bearerAuthentication, jsonParser, function(request, response, next) {
+  debug('PUT: /api/contact/:id');
+
+  Contact.findByIdAndUpdate(request.params.id, request.body, { new: true })
+    .then(contact => {
+      response.json(contact);
+    })
+    .catch(error => {
+      error = createError(404, error.message);
+      next(error);
+    });
+});
+
+
+contactRouter.delete('/api/contact/:id', bearerAuthentication, function(request, response, next) {
+  debug('DELETE: /api/contact/:id');
+
+  Contact.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.sendStatus(204);
+    })
+    .catch(error => {
+      error = createError(404, error.message);
+      next(error);
+    });
+});
+
 module.exports = contactRouter;
