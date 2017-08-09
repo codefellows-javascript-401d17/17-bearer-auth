@@ -34,7 +34,7 @@ authenticationRouter.get('/api/signin', basicAuthentication, function(request, r
   User.findOne({ username: request.authorization.username })
     .then(user => {
       if (!user) {
-        let error = createError(404, 'user not authorized');
+        let error = createError(401, 'user not authorized');
         return Promise.reject(error);
       }
 
