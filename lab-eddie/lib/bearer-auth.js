@@ -28,7 +28,7 @@ module.exports = function(req, res, next) {
       next();
     })
     .catch( err => {
-      return next(createError(401, err.message))
-    })
+      return next(createError(401, err.message));
+    });
   });
-}
+};

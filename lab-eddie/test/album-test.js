@@ -18,7 +18,7 @@ const modelUser = {
 const modelAlbum = {
   title: 'Spoiled Milk',
   datePublished: new Date()
-}
+};
 
 describe('Album Routes Muahahahahaha', function() {
   afterEach( done => {
@@ -59,7 +59,7 @@ describe('Album Routes Muahahahahaha', function() {
           expect(res.body.userID).to.equal(this.user._id.toString());
           done();
         });
-      })
+      });
     });
 
     describe('With an invalid token', () => {
@@ -121,7 +121,7 @@ describe('Album Routes Muahahahahaha', function() {
     });
   });
 
-  
+
 
   describe('GET: /api/album/:id', () => {
     describe('with a valid token and id', function() {
@@ -131,7 +131,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;
@@ -176,7 +176,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;
@@ -218,7 +218,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;
@@ -262,7 +262,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;
@@ -308,7 +308,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;
@@ -351,7 +351,7 @@ describe('Album Routes Muahahahahaha', function() {
         .then( user => user.save())
         .then( user => {
           this.user = user;
-          return user.tokenGen()
+          return user.tokenGen();
         })
         .then( token => {
           this.token = token;

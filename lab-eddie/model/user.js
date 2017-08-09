@@ -38,9 +38,9 @@ User.methods.confirmPass = function(password) {
       if(err) return reject(err);
       if(!valid) return reject(creatError(401, 'Invalid Password!'));
       resolve(this);
-    })
+    });
   });
-}
+};
 
 User.methods.generateHash = function() {
   debug('generateHash');
@@ -48,7 +48,7 @@ User.methods.generateHash = function() {
   return new Promise((resolve, reject) => {
     let tries = 0;
 
-    _generateHash.call(this); 
+    _generateHash.call(this);
 
     function _generateHash() {
       this.findHash = crypto.randomBytes(32).toString('hex');
@@ -59,7 +59,7 @@ User.methods.generateHash = function() {
         tries++;
         _generateHash.call(this);
       });
-    };
+    }
   });
 };
 

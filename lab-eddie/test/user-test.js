@@ -22,7 +22,7 @@ describe('Authentication Routes for lab', function() {
         User.remove({})
         .then(() => done())
         .catch(done);
-      })
+      });
 
       it('Return a 200 code', done => {
         request.post(`${url}/newuser`)
@@ -34,14 +34,14 @@ describe('Authentication Routes for lab', function() {
           done();
         });
       });
-    })
+    });
     describe('With an improper body', function() {
 
       after(done => {
         User.remove({})
         .then(() => done())
         .catch(done);
-      })
+      });
 
       it('Return  a 400 code', done => {
         request.post(`${url}/newuser`)
@@ -51,8 +51,8 @@ describe('Authentication Routes for lab', function() {
           done();
         });
       });
-    })
-  })
+    });
+  });
   describe('GET /api/signin', function() {
     describe('With a proper username', function() {
       before(done => {
@@ -63,14 +63,14 @@ describe('Authentication Routes for lab', function() {
           this.user = user;
           done();
         })
-        .catch(done)
+        .catch(done);
       });
 
       after(done => {
         User.remove({})
         .then(() => done())
         .catch(done);
-      })
+      });
 
       it('Return a 200 code', done => {
         request.get(`${url}/signin`)
@@ -82,7 +82,7 @@ describe('Authentication Routes for lab', function() {
           done();
         });
       });
-    })
+    });
     describe('With an invalid password username', function() {
       before(done => {
         let user = new User(modelUser);
@@ -92,14 +92,14 @@ describe('Authentication Routes for lab', function() {
           this.user = user;
           done();
         })
-        .catch(done)
+        .catch(done);
       });
 
       after(done => {
         User.remove({})
         .then(() => done())
         .catch(done);
-      })
+      });
 
       it('Return a 401 code', done => {
         request.get(`${url}/signin`)
@@ -109,6 +109,6 @@ describe('Authentication Routes for lab', function() {
           done();
         });
       });
-    })
-  })
-})
+    });
+  });
+});
