@@ -3,6 +3,6 @@ sudo: false
 install:
   - npm install
 script:
-  - npm run test-win
+  - npm run test
 services:
   - mongodb
