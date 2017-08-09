@@ -124,46 +124,132 @@ describe('Album Routes Muahahahahaha', function() {
   
 
   describe('GET: /api/album/:id', () => {
-    before( done => {
-      new User(modelUser)
-      .generatePasswordHash(modelUser.passWord)
-      .then( user => user.save())
-      .then( user => {
-        this.user = user;
-        return user.tokenGen()
-      })
-      .then( token => {
-        this.token = token;
-        done();
-      })
-      .catch(done);
+    describe('with a valid token and id', function() {
+      before( done => {
+        new User(modelUser)
+        .generatePasswordHash(modelUser.passWord)
+        .then( user => user.save())
+        .then( user => {
+          this.user = user;
+          return user.tokenGen()
+        })
+        .then( token => {
+          this.token = token;
+          done();
+        })
+        .catch(done);
+      });
+
+      before( done => {
+        modelAlbum.userID = this.user._id.toString();
+        new Album(modelAlbum).save()
+        .then( album => {
+          this.album = album;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( () => {
+        delete modelAlbum.userID;
+      });
+
+      it('should return an album', done => {
+        request.get(`${url}/album/${this.album._id}`)
+        .set({
+          Authorization: `Bearer ${this.token}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.title).to.equal(modelAlbum.title);
+          expect(res.body.userID).to.equal(this.user._id.toString());
+          done();
+        });
+      });
     });
 
-    before( done => {
-      modelAlbum.userID = this.user._id.toString();
-      new Album(modelAlbum).save()
-      .then( album => {
-        this.album = album;
-        done();
-      })
-      .catch(done);
+    describe('with a valid intoken', function() {
+      before( done => {
+        new User(modelUser)
+        .generatePasswordHash(modelUser.passWord)
+        .then( user => user.save())
+        .then( user => {
+          this.user = user;
+          return user.tokenGen()
+        })
+        .then( token => {
+          this.token = token;
+          done();
+        })
+        .catch(done);
+      });
+
+      before( done => {
+        modelAlbum.userID = this.user._id.toString();
+        new Album(modelAlbum).save()
+        .then( album => {
+          this.album = album;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( () => {
+        delete modelAlbum.userID;
+      });
+
+      it('should return an album', done => {
+        request.get(`${url}/album/${this.album._id}`)
+        .set({
+          Authorization: `Bearer Ilovegarbage`
+        })
+        .end((err) => {
+          expect(err.status).to.equal(401);
+          done();
+        });
+      });
     });
 
-    after( () => {
-      delete modelAlbum.userID;
-    });
+    describe('with an invalid id', function() {
+      before( done => {
+        new User(modelUser)
+        .generatePasswordHash(modelUser.passWord)
+        .then( user => user.save())
+        .then( user => {
+          this.user = user;
+          return user.tokenGen()
+        })
+        .then( token => {
+          this.token = token;
+          done();
+        })
+        .catch(done);
+      });
 
-    it('should return an album', done => {
-      request.get(`${url}/album/${this.album._id}`)
-      .set({
-        Authorization: `Bearer ${this.token}`
-      })
-      .end((err, res) => {
-        if (err) return done(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.title).to.equal(modelAlbum.title);
-        expect(res.body.userID).to.equal(this.user._id.toString());
-        done();
+      before( done => {
+        modelAlbum.userID = this.user._id.toString();
+        new Album(modelAlbum).save()
+        .then( album => {
+          this.album = album;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( () => {
+        delete modelAlbum.userID;
+      });
+
+      it('should return a 404 code', done => {
+        request.get(`${url}/album/666666`)
+        .set({
+          Authorization: `Bearer ${this.token}`
+        })
+        .end((err) => {
+          expect(err.status).to.equal(404);
+          done();
+        });
       });
     });
   });
