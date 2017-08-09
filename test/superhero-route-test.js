@@ -64,6 +64,26 @@ describe('Superhero Routes', function() {
         done();
       });
     });
+
+    it('should return unauthorized', done => {
+      request.post(`${url}/api/superhero`)
+      .send(exampleSuperhero)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+    });
+
+    it('should return a bad request', done => {
+      request.post(`${url}/api/superhero`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+    });
   });
 
   describe('GET: /api/superhero/:id', () => {
@@ -176,13 +196,40 @@ describe('Superhero Routes', function() {
     });
 
     it('should return a bad request', done => {
+      var updated = { color: 'blue' };
 
       request.put(`${url}/api/superhero/${this.tempSuperhero._id}`)
+      .send(updated)
       .set({
         Authorization: `Bearer ${this.tempToken}`
       })
       .end((err, res) => {
         expect(res.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should return unauthorized', done => {
+      var updated = { name: 'updated name' };
+
+      request.put(`${url}/api/superhero/${this.tempSuperhero._id}`)
+      .send(updated)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+    });
+
+    it('should return id not found', done => {
+      var updated = { name: 'updated name' };
+
+      request.put(`${url}/api/superhero/`)
+      .send(updated)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         done();
       });
     });
