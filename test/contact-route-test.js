@@ -34,34 +34,58 @@ describe('Contact Routes', function() {
   });
 
   describe('POST: /api/contact', function() {
-    describe('with a valid body', function() {
-      before( done => {
-        let user = new User(exampleUser);
+    beforeEach( done => {
+      let user = new User(exampleUser);
 
-        user.generatePasswordHash(exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          done();
-        })
-        .catch(done);
+      user.generatePasswordHash(exampleUser.password)
+      .then( user => user.save())
+      .then( user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then( token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(done);
+    });
+
+    it('200: should return a contact', done => {
+      request.post(`${url}/api/contact`)
+      .send(exampleContact)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).equal(200);
+        done();
       });
+    });
 
-      it('should return a contact', done => {
-        request.post(`${url}/api/contact`)
-        .send(exampleContact)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).equal(200);
-          done();
-        });
+    it('401: no token provided', done => {
+      request.post(`${url}/api/contact`)
+      .send(exampleContact)
+      .set({
+        Authorization: ''
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).equal(401);
+        done();
+      });
+    });
+
+    it('400: no body provided', done => {
+      request.post(`${url}/api/contact`)
+      .send()
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).equal(400);
+        done();
       });
     });
   });

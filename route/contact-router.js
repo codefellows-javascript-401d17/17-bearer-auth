@@ -13,6 +13,8 @@ const contactRouter = module.exports = Router();
 contactRouter.post('/api/contact', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/contact');
 
+  if (Object.keys(req.body).length === 0) return next(createError(400, 'Bad Request'));
+
   req.body.userID = req.user._id;
 
   new Contact(req.body).save()
