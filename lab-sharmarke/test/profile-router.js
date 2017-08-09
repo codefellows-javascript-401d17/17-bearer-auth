@@ -140,5 +140,77 @@ describe('Profile Routes', function () {
       });
     });
   });
-  
-});
+
+  describe('PUT: /api/profile/:id', function () {
+    beforeEach(done => {
+      new User(exampleUser)
+      .generatePasswordHash(exampleUser.password)
+      .then(user => user.save())
+      .then(user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then(token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(done);
+    });
+    
+    beforeEach(done => {
+      exampleProfile.userID = this.tempUser._id.toString();
+      new Profile(exampleProfile).save()
+      .then(profile => {
+        this.tempProfile = profile;
+        done();
+      })
+      .catch(done);
+    });
+    
+    after(() => {
+      delete exampleProfile.userID;
+    });
+    
+    it('should return a profile', done => {
+      request.put(`${url}/api/profile/${this.tempProfile._id}`)
+        .send({ name: 'fake name' })
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.name).to.equal('fake name');
+          done();
+        });
+    });
+
+    it('should return a 404', done => {
+      request.put(`${url}/api/profile`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+    });
+
+    it('should return a 401', done => {
+      request.put(`${url}/api/profile/${this.tempProfile._id}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+    });
+
+    it('should return a 400', done => {
+      request.post(`${url}/api/profile`)
+        .send({ name: 'aahaha', desc: 'wahgwan' })
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+  });
