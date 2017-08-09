@@ -16,7 +16,7 @@ albumRouter.post('/api/album', bearerAuth, jsonParser, function(req, res, next) 
   req.body.userID = req.user._id;
   new Album(req.body).save()
   .then( album => res.json(album))
-  .catch(next);
+  .catch(err => next(createError(400, err.message)));
 });
 
 albumRouter.get('/api/album/:id', bearerAuth, function(req, res, next) {
@@ -26,5 +26,15 @@ albumRouter.get('/api/album/:id', bearerAuth, function(req, res, next) {
   .then( album => {
     res.json(album);
   })
-  .catch(next);
+  .catch(err => next(createError(404, err.message)));
+});
+
+albumRouter.put('/api/album/:id', bearerAuth, function(req, res, next) {
+  debug('PUT: /api/album/:id');
+  
+  Album.findByIdAndUpdate(req.params.id, req.body)
+  .then( album => {
+    res.json(album);
+  })
+  .catch(err => next(createError(404, err.message)));
 });

@@ -19,9 +19,8 @@ module.exports = function(req, res, next) {
   if (!token) {
     return next(createError(401, 'No token provided'));
   }
-
   jwt.verify(token, process.env.APP_SECRET, (err, decoded) => {
-    if (err) return next(err);
+    if (err) return next(createError(401, err.message));
 
     User.findOne({ findHash: decoded.token })
     .then( user => {
@@ -29,7 +28,7 @@ module.exports = function(req, res, next) {
       next();
     })
     .catch( err => {
-      next(createError(401, err.message))
+      return next(createError(401, err.message))
     })
   });
 }
