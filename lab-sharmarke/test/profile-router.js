@@ -63,6 +63,27 @@ describe('Profile Routes', function () {
           done();
         });
     });
+
+    it('should return a 401', done => {
+      request.post(`${url}/api/profile`)
+      .send(exampleProfile)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+    });
+
+    it('should return a 400', done => {
+      request.post(`${url}/api/profile`)
+      .send({ name: 'shark', desc: 'black'})
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+    });
   });
 
   describe('GET: /api/profile/:id', () => {
@@ -90,25 +111,34 @@ describe('Profile Routes', function () {
         })
         .catch(done);
     });
-
+    
     after(() => {
       delete exampleProfile.userID;
     });
-
+    
     it('should return a profile', done => {
       request.get(`${url}/api/profile/${this.tempProfile._id}`)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          let date = new Date(res.body.created).toString();
-          expect(res.body.name).to.equal(exampleProfile.name);
-          expect(res.body.desc).to.equal(exampleProfile.desc);
-          expect(res.body.userID).to.equal(this.tempUser._id.toString());
-          expect(date).to.not.equal('Invalid Date');
-          done();
-        })
-    })
-  })
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        let date = new Date(res.body.created).toString();
+        expect(res.body.name).to.equal(exampleProfile.name);
+        expect(res.body.desc).to.equal(exampleProfile.desc);
+        expect(res.body.userID).to.equal(this.tempUser._id.toString());
+        expect(date).to.not.equal('Invalid Date');
+        done();
+      });
+    });
+
+    it('should return a 404', done => {
+      request.get(`${url}/api/profile/${this.tempProfile._id}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+    });
+  });
+  
 });
