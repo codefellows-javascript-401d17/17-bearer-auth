@@ -19,9 +19,9 @@ const exampleUser = {
 describe('Auth Routes', function() {
   describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
-      after( done => {
+      after(done => {
         User.remove({})
-        .then( () => done())
+        .then(() => done())
         .catch(done);
       });
 
