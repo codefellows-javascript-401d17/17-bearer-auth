@@ -21,7 +21,7 @@ contactRouter.post('/api/contact', bearerAuth, jsonParser, function(req, res, ne
 });
 
 contactRouter.get('/api/contact/:id', bearerAuth, function(req, res, next) {
-  debug('GET: /api/gallery/:id');
+  debug('GET: /api/contact/:id');
 
   Contact.findById(req.params.id)
   .then( contact => res.json(contact))
@@ -31,8 +31,15 @@ contactRouter.get('/api/contact/:id', bearerAuth, function(req, res, next) {
 contactRouter.put('/api/contact/:id', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/contact');
 
-  Contact.findByIdAndUpdate(req.params.id)
+  Contact.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then( contact => res.json(contact))
-  .catch(next);
+  .catch( err => next(createError(404, err.message)));
 });
 
+contactRouter.delete('/api/contact/:id', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/contact');
+
+  Contact.findByIdAndRemove(req.params.id)
+  .then( () => res.status(204).send())
+  .catch( err => next(createError(404, err.message)));
+});
