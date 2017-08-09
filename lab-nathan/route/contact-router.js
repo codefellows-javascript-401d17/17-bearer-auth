@@ -3,15 +3,16 @@
 const Router = require('express').Router;
 const debug = require('debug')('authentication-server:contact-router');
 const createError = require('http-errors');
+const jsonParser = require('body-parser').json();
 const bearerAuthentication = require('../middleware/bearer-authentication.js');
 const Contact = require('../model/contact.js');
 
 const contactRouter = new Router();
 
-contactRouter.post('/api/contact', bearerAuthentication, function(request, response, next) {
+contactRouter.post('/api/contact', bearerAuthentication, jsonParser, function(request, response, next) {
   debug('POST: /api/contact');
-
   request.body.userId = request.user._id;
+
 
   Contact.create(request.body)
     .then(contact => {

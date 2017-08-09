@@ -97,11 +97,11 @@ describe('Authentication Routes', function() {
 
     describe('with an unauthorized user', function() {
 
-      it('should return a 404 error', done => {
+      it('should return a 401 error', done => {
         request.get(`${url}/api/signin`)
           .auth('fakeuser', '4321')
           .end((error, response) => {
-            expect(response.status).to.equal(404);
+            expect(response.status).to.equal(401);
             done();
           });
       });

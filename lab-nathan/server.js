@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const debug = require('debug')('authentication-server:server');
 const errors = require('./middleware/errors.js');
 const authenticationRouter = require('./route/authentication-router.js');
+const contactRouter = require('./route/contact-router.js');
 
 const app = express();
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGODB_URI);
 app.use(cors());
 app.use(morgan('dev'));
 app.use(authenticationRouter);
+app.use(contactRouter);
 app.use(errors);
 
 app.listen(process.env.PORT, function() {
