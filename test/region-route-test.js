@@ -91,7 +91,7 @@ describe('Region Routes', function() {
       .catch(done);
     });
 
-    after(() {} {
+    after(() => {
       delete exampleRegion.userID;
     });
 
