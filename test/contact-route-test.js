@@ -113,4 +113,55 @@ describe('Contact Routes', function() {
       });
     });
   });
+
+  describe('PUT: /api/contact/id:', () => {
+    describe('with a valid body', () => {
+      before( done => {
+        let user = new User(exampleUser);
+
+        user.generatePasswordHash(exampleUser.password)
+        .then( user => user.save())
+        .then( user => {
+          this.tempUser = user;
+          return user.generateToken();
+        })
+        .then( token => {
+          this.tempToken = token;
+          done();
+        })
+        .catch(done);
+      });
+
+      before( done => {
+        exampleContact.userID = this.tempUser._id.toString();
+        new Contact(exampleContact).save()
+        .then( contact => {
+          this.tempContact = contact;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( () => {
+        delete exampleContact.userID;
+      });
+
+      it('should update an existing contact', done => {
+        let updated = { name: 'My Updated Contact', phone: 2531111111};
+
+        request.put(`${url}/api/contact/${this.tempContact._id}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).equal(200);
+          expect(res.body.name).equal(updated.name);
+          expect(res.body.phone).equal(updated.phone);
+          done();
+        });
+      });
+    });
+  });
 });
