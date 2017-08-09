@@ -1,6 +1,6 @@
 'use strict';
 
-const crypto = require('crypto');
+const crypto = require('crypto'); // built in module, doesn't need to be installed 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
