@@ -21,7 +21,7 @@ describe('Auth Routes', function() {
     describe('with a valid body', function() {
       after(done => {
         User.remove({})
-        .then() => done())
+        .then(() => done())
         .catch(done);
       });
 
