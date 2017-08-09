@@ -25,7 +25,7 @@ contactRouter.get('/api/contact/:id', bearerAuth, function(req, res, next) {
 
   Contact.findById(req.params.id)
   .then( contact => res.json(contact))
-  .catch(next);
+  .catch(err => next(createError(404, err.message)));
 });
 
 contactRouter.put('/api/contact/:id', bearerAuth, jsonParser, function(req, res, next) {

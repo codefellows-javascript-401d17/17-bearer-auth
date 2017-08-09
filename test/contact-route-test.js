@@ -67,49 +67,69 @@ describe('Contact Routes', function() {
   });
 
   describe('GET: /api/contact/:id', () => {
-    describe('with a valid contact id', () => {
-      before( done => {
-        let user = new User(exampleUser);
+    beforeEach( done => {
+      let user = new User(exampleUser);
 
-        user.generatePasswordHash(exampleUser.password)
-        .then( user => user.save())
-        .then( user => {
-          this.tempUser = user;
-          return user.generateToken();
-        })
-        .then( token => {
-          this.tempToken = token;
-          done();
-        })
-        .catch(done);
+      user.generatePasswordHash(exampleUser.password)
+      .then( user => user.save())
+      .then( user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then( token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(done);
+    });
+
+    beforeEach( done => {
+      exampleContact.userID = this.tempUser._id.toString();
+      new Contact(exampleContact).save()
+      .then( contact => {
+        this.tempContact = contact;
+        done();
+      })
+      .catch(done);
+    });
+
+    afterEach( () => {
+      delete exampleContact.userID;
+    });
+
+    it('200: should return a contact', done => {
+      request.get(`${url}/api/contact/${this.tempContact._id}`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.body.name).equal(exampleContact.name);
+        expect(res.status).equal(200);
+        done();
       });
+    });
 
-      before( done => {
-        exampleContact.userID = this.tempUser._id.toString();
-        new Contact(exampleContact).save()
-        .then( contact => {
-          this.tempContact = contact;
-          done();
-        })
-        .catch(done);
+    it('401: no token provided', done => {
+      request.get(`${url}/api/contact/${this.tempContact._id}`)
+      .set({
+        Authorization: ''
+      })
+      .end((err, res) => {
+        expect(res.status).equal(401);
+        done();
       });
+    });
 
-      after( () => {
-        delete exampleContact.userID;
-      });
-
-      it('should return a contact', done => {
-        request.get(`${url}/api/contact/${this.tempContact._id}`)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-
-          expect(res.body.name).equal(exampleContact.name);
-          expect(res.status).equal(200);
-          done();
-        });
+    it('404: should return no request found', done => {
+      request.get(`${url}/api/contact/12345`)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).equal(404);
+        done();
       });
     });
   });
