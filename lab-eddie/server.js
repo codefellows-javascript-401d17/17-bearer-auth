@@ -9,6 +9,7 @@ const debug = require('debug')('app:server.js');
 
 const app = express();
 const authRoutes = require('./route/auth-route.js');
+const albumRoutes = require('./route/bearer-auth.js');
 const errors = require('./lib/error.js');
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +18,8 @@ mongoose.connect(process.env.MONGODB_URI);
 
 app.use(morgan('dev'));
 app.use(cors());
-app.use(authRoutes)
+app.use(authRoutes);
+app.use(albumRoutes);
 app.use(errors);
 
 app.listen(PORT, () => {

@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const albumSchema = Schema({
   title: { type: String, required: true },
   datePublished: { type: Date, required: true},
-  tracks: [{type: Schema.type.ObjectId, ref: 'track'}],
+  tracks: [{type: Schema.Types.ObjectId, ref: 'track'}],
   userID: { type: Schema.Types.ObjectId, required: true }
 });
 
