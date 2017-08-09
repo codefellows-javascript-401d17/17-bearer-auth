@@ -1,63 +1,35 @@
-![CF](https://camo.githubusercontent.com/70edab54bba80edb7493cad3135e9606781cbb6b/687474703a2f2f692e696d6775722e636f6d2f377635415363382e706e67) 17: Bearer Auth
-===
+# Basic Auth - Lab 16
 
-## Submission Instructions
-  * fork this repository & create a new branch for your work
-  * write all of your code in a directory named `lab-` + `<your name>` **e.g.** `lab-susan`
-  * push to your repository
-  * submit a pull request to this repository
-  * submit a link to your PR in canvas
-  * write a question and observation on canvas
+### Description:
 
-## Learning Objectives  
-* students will be able to create bearer authentication middleware
-* students will be able to utilize their bearer authentication middleware in their route structures
-* students will be able to test against authenticated routes
+This app is a RESTful api that allows users to sign up and sign in. The user creates a user account with a username, password and email. When the user signs in that data is
 
-## Requirements
-#### Configuration
-* `package.json`
-* `.eslintrc`
-* `.gitignore`
-* `.env`
-* `README.md`
+### Resources:
 
-## Description
-* create a new branch and use the same forked repository from lab 15
-* create a bearer auth middleware module (feel free to use the one from lecture as a reference point)
-* create a new resource that has at least three properties
-  * this resource must have a property of `userID` that references the `_id` of the user that created the resource
-  * the `userID` property can only be set from an `_id` found using your bearer auth middleware module
-* as always, use the **npm** `debug` module to log function calls that are used within your application
-* using the express `Router`, create routes for doing **RESTFUL CRUD** operations against your resource
+#### Band:
+Each band is created and interacted with using RESTful api methods. The model is stored in the database with a schema. That schema has four properties.
+* name
+* genre
+* origin
+* userID - this maps back to the user model that connects to the band
 
-## Server Endpoints
-### `/api/resource-name`
-* `POST` request
-* pass data as stringifed JSON in the body of a post request to create a new resource
+### Routes:
+#### POST:
+`/api/signup`
+The user makes a post request upon sign up. The username and email submitted must be unique to the app (no duplicates). The password is encrypted with a base64 hash and all the data is stored to the database. Once successful the user get a token for that session that would allow them to access other routes that would be available within the app.
+`/api/band`
+Once the user has access to the band route they can begin making post requests of new bands at this url.
 
-### `/api/resource-name/:id`
-* `GET` request
-* pass the id of a resource though the url endpoint to `req.params` to fetch a resource   
-* `PUT` request
-* pass data as stringifed JSON in the body of a put request to update a resource
-* `DELETE` request
-* pass the id of a resource though the url endpoint *(using `req.params`)* to delete a resource   
+#### GET:
+`/api/signin`
+The user makes a get request upon sign in. The username and password entered get checked against the user data already stored in the database. If what is entered is valid then the user will receive a token to access the other routes that would be available in the app. If not then the user will get rejected as unauthorized.
+`/api/band/:id`
+Once the user has posted a band they can then read the band resource with this url. The get request uses the mongodb id to find the exact band the user is looking for.
 
-## Tests
-* create a test to ensure that your API returns a status code of 404 for routes that have not been registered
-* create a series of tests to ensure that your `/api/resource-name` endpoint responds as described for each condition below:
-* `GET` - test **200**, for a request made with a valid id
-* `GET` - test **401**, if no token was provided
-* `GET` - test **404**, for a valid request with an id that was not found
-* `PUT` - test **200**, for a post request with a valid body
-* `PUT` - test **401**, if no token was provided
-* `PUT` - test **400**, if the body was invalid
-* `PUT` - test **404**, for a valid request made with an id that was not found
-* `POST` - test **200**, for a post request with a valid body
-* `POST` - test **401**, if no token was provided
-* `POST` - test **400**, if no body was provided or if the body was invalid
+#### PUT:
+`/api/band/:id`
+The user can update the content of an exact band at this url.
 
-## Bonus
-* **1pt:** a `GET` request to `/api/resource-name` should return an array of all of the ids for that resource
-* **1pt:** create a series of tests for a `DELETE` request
+#### DELETE
+`/api/band/:id`
+The user can delete an entire band using its id following this url. 
