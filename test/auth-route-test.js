@@ -20,7 +20,7 @@ describe('Auth Routes', function() {
   describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
       after(done => {
-        User.remove({});
+        User.remove({})
         .then() => done())
         .catch(done);
       });
