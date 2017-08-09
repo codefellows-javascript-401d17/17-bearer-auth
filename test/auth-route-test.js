@@ -52,7 +52,7 @@ describe('Auth Routes', function() {
 
       after(done => {
         User.remove({})
-        .then(() => ())
+        .then(() => done())
         .catch(done);
       });
 
