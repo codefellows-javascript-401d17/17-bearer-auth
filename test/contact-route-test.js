@@ -193,5 +193,29 @@ describe('Contact Routes', function() {
         done();
       });
     });
+
+    it('400: no update provided', done => {
+      request.put(`${url}/api/contact/${this.tempContact._id}`)
+      .send()
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).equal(400);
+        done();
+      });
+    });
+
+    it('404: valid request but no id found', done => {
+      request.put(`${url}/api/contact/12345`)
+      .send(updated)
+      .set({
+        Authorization: `Bearer ${this.tempToken}`
+      })
+      .end((err, res) => {
+        expect(res.status).equal(404);
+        done();
+      });
+    });
   });
 });

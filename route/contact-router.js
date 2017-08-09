@@ -31,6 +31,8 @@ contactRouter.get('/api/contact/:id', bearerAuth, function(req, res, next) {
 contactRouter.put('/api/contact/:id', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/contact');
 
+  if (Object.keys(req.body).length === 0) return next(createError(400, 'Bad Request'));
+
   Contact.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then( contact => res.json(contact))
   .catch( err => next(createError(404, err.message)));
