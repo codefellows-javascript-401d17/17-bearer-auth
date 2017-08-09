@@ -70,7 +70,6 @@ describe('Contact Routes', function() {
         Authorization: ''
       })
       .end((err, res) => {
-        if (err) return done(err);
         expect(res.status).equal(401);
         done();
       });
@@ -83,7 +82,6 @@ describe('Contact Routes', function() {
         Authorization: `Bearer ${this.tempToken}`
       })
       .end((err, res) => {
-        if (err) return done(err);
         expect(res.status).equal(400);
         done();
       });
