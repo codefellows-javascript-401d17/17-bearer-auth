@@ -29,10 +29,10 @@ albumRouter.get('/api/album/:id', bearerAuth, function(req, res, next) {
   .catch(err => next(createError(404, err.message)));
 });
 
-albumRouter.put('/api/album/:id', bearerAuth, function(req, res, next) {
+albumRouter.put('/api/album/:id', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/album/:id');
   
-  Album.findByIdAndUpdate(req.params.id, req.body)
+  Album.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then( album => {
     res.json(album);
   })
