@@ -28,3 +28,22 @@ profileRouter.get('/api/profile/:id', bearerAuth, function (req, res, next) {
     })
     .catch(next);
 });
+
+profileRouter.put('/api/profile/:id', bearerAuth, jsonParser, function (req, res, next) {
+  debug('PUT: /api/profile/:id');
+
+  Profile.findByIdAndUpdate(req.params.id, req.body, { 'new': true })
+    .then(profile => res.json(profile))
+    .catch(err => {
+      if (err.name === 'ValidationError') return next(err);
+      next();
+    });
+});
+
+profileRouter.delete('/api/profile/:id', bearerAuth, function (req, res, next) {
+  debug('DELETE: /api/profile/:id');
+
+  Profile.findByIdAndRemove(req.params.id)
+    .then(() => res.status(204).send())
+    .catch(next);
+});

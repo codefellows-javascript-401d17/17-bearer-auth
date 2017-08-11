@@ -32,7 +32,7 @@ describe('Profile Routes', function () {
   });
 
   describe('POST: /api/profile', () => {
-    before(done => {
+    beforeEach(done => {
       new User(exampleUser)
         .generatePasswordHash(exampleUser.password)
         .then(user => user.save())
@@ -127,15 +127,14 @@ describe('Profile Routes', function () {
         expect(res.body.name).to.equal(exampleProfile.name);
         expect(res.body.desc).to.equal(exampleProfile.desc);
         expect(res.body.userID).to.equal(this.tempUser._id.toString());
-        expect(date).to.not.equal('Invalid Date');
         done();
       });
     });
 
     it('should return a 404', done => {
-      request.get(`${url}/api/profile/${this.tempProfile._id}`)
+      request.get(`${url}/api/profile`)
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(404);
         done();
       });
     });
